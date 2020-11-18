@@ -1,0 +1,14 @@
+# macos stuff
+.DS_Store
+
+# cache
+tryout-cnns/venv/__pycache__
+
+tryout-cnns/venv/lib
+tryout-cnns/venv/bin
+tryout-cnns/.idea
+
+# data
+tryout-cnns/venv/grey4-illcol
+tryout-cnns/venv/grey4-illdir
+tryout-cnns/venv/grey4-viewdir

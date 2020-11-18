@@ -1,0 +1,9 @@
+Pillow
+numpy
+pandas
+random
+seaborn
+matplotlib
+warnings
+keras
+sklearn
