@@ -21,7 +21,7 @@ from keras.callbacks import ReduceLROnPlateau
 class TrainerAgent:
 
     def __init__(self, train, test):
-        self.epochs = 20
+        self.epochs = 50
         self.batchSize = 5
 
         self.train = train
@@ -147,7 +147,7 @@ class TrainerAgent:
 
     def plotSample(self):
         img = self.X_train.iloc[0].to_numpy ()
-        img = img.reshape (RESOLUTION)
+        img = img.reshape(RESOLUTION)
         plt.imshow (img, cmap='gray')
         plt.title (self.train.iloc[0, 0])
         plt.axis ("off")

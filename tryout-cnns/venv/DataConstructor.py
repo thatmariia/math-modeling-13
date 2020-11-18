@@ -59,5 +59,6 @@ class DataConstructor:
 
     def transformImage(self, filepath):
         image = Image.open(filepath)
+        image = image.resize((RESOLUTION[0], RESOLUTION[1]))
         data = asarray(image, dtype="float")
         return data.flatten()
