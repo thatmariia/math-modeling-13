@@ -8,5 +8,5 @@ if __name__ == '__main__':
     dataConstructor = DataConstructor()
     dataConstructor.construct()
 
-    trainerAgent = TrainerAgent(train=dataConstructor.df)
-    trainerAgent.perform ()
+    trainerAgent = TrainerAgent(train=dataConstructor.df, test=dataConstructor.df_test)
+    trainerAgent.perform()

@@ -20,18 +20,22 @@ from keras.callbacks import ReduceLROnPlateau
 
 class TrainerAgent:
 
-    def __init__(self, train):
-        self.epochs = 50
+    def __init__(self, train, test=None):
+        self.epochs = 20
         self.batchSize = 1
 
         self.train = train
-        #self.test = test.drop(labels=["label"], axis=1)
+        self.test = test
 
         self.Y_train = train["label"]  #.astype(int)
         self.X_train = train.drop(labels=["label"], axis=1)
 
-        self.X_val = None
-        self.Y_val = None
+        if MANUAL_TEST_DATA:
+            self.Y_val = test["label"]
+            self.X_val = test.drop (labels=["label"], axis=1)
+        else:
+            self.Y_val = None
+            self.X_val = None
 
         self.model = None
         self.datagen = None
@@ -40,7 +44,8 @@ class TrainerAgent:
 
     def perform(self):
         self.preprocess()
-        self.split()
+        if not MANUAL_TEST_DATA:
+            self.split()
         self.constructModel()
         self.compileModel()
         self.augment()
@@ -135,24 +140,17 @@ class TrainerAgent:
         self.encode()
 
     def encode(self):
-        #print ("Y_train before = ", self.Y_train)
         self.Y_train = to_categorical(self.Y_train)
-        #print("Y_train after = ", self.Y_train)
+        self.Y_val   = to_categorical(self.Y_val)
 
     def reshape(self):
         r0 = RESOLUTION[0]
         r1 = RESOLUTION[1]
         self.X_train = self.X_train.values.reshape(-1, r0, r1, NRCHANNELS)
+        self.X_val   = self.X_val.values.reshape(-1, r0, r1, NRCHANNELS)
         #self.test = self.test.values.reshape (-1, r0, r1, 1)
 
     def normalize(self):
         self.X_train = self.X_train / 255.0
+        self.X_val   = self.X_val / 255.0
         #self.test = self.test / 255.0
-
-    def plotSample(self):
-        img = self.X_train.iloc[0].to_numpy ()
-        img = img.reshape(RESOLUTION)
-        plt.imshow (img, cmap='gray')
-        plt.title (self.train.iloc[0, 0])
-        plt.axis ("off")
-        plt.show ()

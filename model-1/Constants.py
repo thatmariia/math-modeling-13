@@ -12,3 +12,12 @@ FILENAME_MAP = {
     "data/aloi_red4_stereo"  : ["_{}.png".format(i) for i in ["c", "l", "r"]],
     "data/aloi_red4_view"    : ["_r{}.png".format(i) for i in range(0, 356, 5)]
 }
+
+MANUAL_TEST_DATA = True
+
+FOLDERNAME_FAULTY = "data/faulty_data"
+FAULTY_MAP = {
+    FOLDERNAME_FAULTY + "/651/651_1.png" : 651,
+    FOLDERNAME_FAULTY + "/714/714_1.png" : 714,
+    FOLDERNAME_FAULTY + "/714/714_2.png" : 714
+}

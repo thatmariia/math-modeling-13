@@ -12,8 +12,14 @@ class DataConstructor:
     def __init__(self):
 
         self.df = self.getEmptyDF()
+        self.df_test = self.getEmptyDF()
 
     def construct(self):
+        if MANUAL_TEST_DATA:
+            self.constructFaulty()
+        self.constructData()
+
+    def constructData(self):
 
         for folder in FOLDERNAMES:
             for objectID in IMAGE_IDS:
@@ -29,6 +35,12 @@ class DataConstructor:
                     row = self.createRowDict(label=objectID, im=im, columns=self.df.columns)
                     self.df = self.df.append(row, ignore_index=True)
 
+    def constructFaulty(self):
+
+        for (fp, label) in FAULTY_MAP.items():
+            im = self.transformImage(filepath=fp)
+            row = self.createRowDict(label=label, im=im, columns=self.df_test.columns)
+            self.df_test = self.df_test.append(row, ignore_index=True)
 
     def getEmptyDF(self):
         columns = ["label"] + ["pixel{}".format(i) for i in range(NRPIXELS)]
