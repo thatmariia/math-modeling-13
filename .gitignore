@@ -1,6 +1,8 @@
 # macos stuff
 .DS_Store
 
+### TRYOUT
+
 # cache
 tryout-cnns/venv/__pycache__
 
@@ -12,3 +14,10 @@ tryout-cnns/.idea
 tryout-cnns/venv/grey4-illcol
 tryout-cnns/venv/grey4-illdir
 tryout-cnns/venv/grey4-viewdir
+
+### MODEL 1
+
+model-1/venv/
+model-1/.idea/
+model-1/__pycache__/
+model-1/data/
