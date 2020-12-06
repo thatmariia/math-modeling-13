@@ -5,8 +5,6 @@ from numpy import asarray
 import pandas as pd
 import random
 
-
-
 class DataConstructor:
 
     def __init__(self):
@@ -15,8 +13,7 @@ class DataConstructor:
         self.df_test = self.getEmptyDF()
 
     def construct(self):
-        if MANUAL_TEST_DATA:
-            self.constructFaulty()
+        self.constructTest()
         self.constructData()
 
     def constructData(self):
@@ -32,15 +29,22 @@ class DataConstructor:
                 for i in range(len(filenames)):
                     fp = folder + "/{}/".format(objectID) + filenames[i]
                     im = self.transformImage(filepath=fp)
-                    row = self.createRowDict(label=objectID, im=im, columns=self.df.columns)
+                    row = self.createRowDict(label=LABEL_IDS[objectID], im=im, columns=self.df.columns)
                     self.df = self.df.append(row, ignore_index=True)
 
-    def constructFaulty(self):
+    def constructTest(self):
 
-        for (fp, label) in FAULTY_MAP.items():
-            im = self.transformImage(filepath=fp)
-            row = self.createRowDict(label=label, im=im, columns=self.df_test.columns)
-            self.df_test = self.df_test.append(row, ignore_index=True)
+        for (fp, objectID) in TEST_MAP.items():
+            try:
+                im = self.transformImage(filepath=fp)
+                row = self.createRowDict(label=LABEL_IDS[objectID], im=im, columns=self.df_test.columns)
+                if MANUAL_TEST_DATA:
+                    self.df_test = self.df_test.append(row, ignore_index=True)
+                else:
+                    self.df = self.df.append (row, ignore_index=True)
+            except:
+                print("failure ", fp)
+                pass
 
     def getEmptyDF(self):
         columns = ["label"] + ["pixel{}".format(i) for i in range(NRPIXELS)]
@@ -58,7 +62,7 @@ class DataConstructor:
 
     def transformImage(self, filepath):
         image = Image.open(filepath)
-        image = image.resize((RESOLUTION[0], RESOLUTION[1]))
+        image = image.resize((RESOLUTION[0], RESOLUTION[1]), Image.ANTIALIAS)
         data = asarray(image, dtype="float")
         d0 = [data[j][i][0] for i in range(data.shape[1]) for j in range(data.shape[0])]
         d1 = [data[j][i][1] for i in range(data.shape[1]) for j in range(data.shape[0])]

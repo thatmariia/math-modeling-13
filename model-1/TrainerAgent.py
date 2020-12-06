@@ -21,7 +21,7 @@ from keras.callbacks import ReduceLROnPlateau
 class TrainerAgent:
 
     def __init__(self, train, test=None):
-        self.epochs = 20
+        self.epochs = 100
         self.batchSize = 1
 
         self.train = train
@@ -73,7 +73,7 @@ class TrainerAgent:
         self.model.add(Flatten())
         self.model.add(Dense(256, activation="relu"))
         self.model.add(Dropout(0.5))
-        self.model.add(Dense(max(IMAGE_IDS)+1, activation="softmax"))
+        self.model.add(Dense(NRIMAGES, activation="softmax"))
 
         print(self.model.summary())
 
@@ -88,12 +88,12 @@ class TrainerAgent:
                 featurewise_std_normalization=False,  # divide inputs by std of the dataset
                 samplewise_std_normalization=False,  # divide each input by its std
                 zca_whitening=False,  # dimension reduction
-                rotation_range=5,  # randomly rotate images in the range 5 degrees
-                zoom_range=0.1,  # Randomly zoom image 10%
-                width_shift_range=0.1,  # randomly shift images horizontally 10%
-                height_shift_range=0.1,  # randomly shift images vertically 10%
-                horizontal_flip=False,  # randomly flip images
-                vertical_flip=False)  # randomly flip images
+                rotation_range=90,  # randomly rotate images in the range 90 degrees
+                zoom_range=0.2,  # Randomly zoom image 20%
+                width_shift_range=0.2,  # randomly shift images horizontally 20%
+                height_shift_range=0.2,  # randomly shift images vertically 20%
+                horizontal_flip=True,  # randomly flip images
+                vertical_flip=True)  # randomly flip images
 
         self.datagen.fit(self.X_train)
 
@@ -103,6 +103,9 @@ class TrainerAgent:
                                                 steps_per_epoch=self.X_train.shape[0] // self.batchSize)
 
     def evaluate(self):
+        print("Prediction:")
+        print(self.model.predict(self.X_val))
+
         # Plot the loss and accuracy curves for training and validation
         plt.plot(self.history.history['val_loss'], color='b', label="validation loss")
         plt.title("Test Loss")
@@ -148,9 +151,7 @@ class TrainerAgent:
         r1 = RESOLUTION[1]
         self.X_train = self.X_train.values.reshape(-1, r0, r1, NRCHANNELS)
         self.X_val   = self.X_val.values.reshape(-1, r0, r1, NRCHANNELS)
-        #self.test = self.test.values.reshape (-1, r0, r1, 1)
 
     def normalize(self):
         self.X_train = self.X_train / 255.0
         self.X_val   = self.X_val / 255.0
-        #self.test = self.test / 255.0
